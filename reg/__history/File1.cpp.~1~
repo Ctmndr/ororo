@@ -1,0 +1,24 @@
+#pragma hdrstop
+#pragma argsused
+
+#ifdef _WIN32
+#include <tchar.h>
+#else
+  typedef char _TCHAR;
+  #define _tmain main
+#endif
+
+#include <stdio.h>
+#include <iostream.h>
+#include <Registry.hpp>
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	try {
+	 TRegistry *reg = new TRegistry;
+	  //	reg->RootKey = HKEY_LOCAL_MACHINE;
+	} catch (...) { cout<<"Îøèáêà"<<endl;
+	}
+	system ("pause");
+	return 0;
+}
