@@ -21,31 +21,28 @@ HKEY fKey;
 DWORD pcbData = 255;
 char* pvData = new char[pcbData];
 DWORD regtype = 0;
-char* text = new char[20];
-cout<<"Введите путь"<<endl;
-cin>>text;
 
-if(RegOpenKeyEx(HKEY_CLASSES_ROOT,text, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)//                 //Открываем ключ HKEY_CLASSES_ROOT/.xml
+if(RegOpenKeyEx(HKEY_CLASSES_ROOT, ".xml", 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)                  //Открываем ключ HKEY_CLASSES_ROOT/.xml
 {
 	if (RegQueryValueEx(fKey, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)                //Читаем его значение (по умолчанию) - "xmlfile"
-	{   cout<<"значение по умолчанию: "<<pvData<<endl;
+	{
 		RegCloseKey(fKey);																                 //Закрываем ключ
 		if(RegOpenKeyEx(HKEY_CLASSES_ROOT, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ HKEY_CLASSES_ROOT/xmlfile
 		{
 		 RegQueryValueEx (fKey, NULL, NULL, &regtype, NULL, &pcbData);
 			if (ERROR_SUCCESS==RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) )//Читаем его значение (по умолчанию) - "XML Document"
-				cout<<"значение по умолчанию: "<<pvData<<endl;
+				cout<<pvData<<endl;
 			else
-				cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\"<<pvData<<endl;
+				cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\xmlfile.";                  //В итоге получаем сообщение об ошибке
 		}
 		else
-			cout<<"Не могу открыть HKEY_CLASSES_ROOT\\"<<pvData<<endl;
+			cout<<"Не могу открыть HKEY_CLASSES_ROOT\\xmlfile";
 	}
 	else
-		cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\"<<text<<endl;
+		cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\.xml.@";
 }
 else
-	cout<<"Не могу открыть HKEY_CLASSES_ROOT\\"<<text<<endl;
+	cout<<"Не могу открыть HKEY_CLASSES_ROOT\\.xml";
 delete[] pvData;
   //	try {
 
