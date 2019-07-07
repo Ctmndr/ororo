@@ -29,11 +29,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	result = RegOpenKeyEx(HKEY_CLASSES_ROOT, "Applications\\MyProg.exe\\command", 0, KEY_ALL_ACCESS, &Key);
 
-   //	RegQueryValueEx(Key, "param2",0, 0, (LPBYTE)buf, &dws); //читается, все хорошо, а как считать (default) ?
-		RegQueryValueEx(Key, NULL,0, 0, (LPBYTE)buf, &dws);
+	RegQueryValueEx(Key, "param2",0, 0, (LPBYTE)buf, &dws); //читается, все хорошо, а как считать (default) ?
 
 	RegCloseKey(Key);
-
+    RegQueryValueEx(Key, NULL,0, 0, (LPBYTE)buf, &dws);
 	} catch (...) { cout<<"Ошибка"<<endl;
 	}
 	system ("pause");
