@@ -15,27 +15,81 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	try {
-	char text[20] = " ";
-	//HKEY hKey;
+ system("chcp 1251");
+ system("cls");
+HKEY fKey;
+DWORD pcbData = 255;
+char* pvData = new char[pcbData];
+DWORD regtype = 0;
 
-	// TRegistry *reg = new TRegistry();
-	  //	reg->RootKey = HKEY_LOCAL_MACHINE;
-      HKEY Key;
-	char buf[256];
+if(RegOpenKeyEx(HKEY_CLASSES_ROOT, ".xml", 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)                  //Открываем ключ HKEY_CLASSES_ROOT/.xml
+{
+	if (RegQueryValueEx(fKey, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)                //Читаем его значение (по умолчанию) - "xmlfile"
+	{
+		RegCloseKey(fKey);																                 //Закрываем ключ
+		if(RegOpenKeyEx(HKEY_CLASSES_ROOT, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ HKEY_CLASSES_ROOT/xmlfile
+		{
+		 RegQueryValueEx (fKey, NULL, NULL, &regtype, NULL, &pcbData);
+			if (ERROR_SUCCESS==RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) )//Читаем его значение (по умолчанию) - "XML Document"
+				cout<<pvData<<endl;
+			else
+				cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\xmlfile.";                  //В итоге получаем сообщение об ошибке
+		}
+		else
+			cout<<"Не могу открыть HKEY_CLASSES_ROOT\\xmlfile";
+	}
+	else
+		cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\.xml.@";
+}
+else
+	cout<<"Не могу открыть HKEY_CLASSES_ROOT\\.xml";
+delete[] pvData;
+  //	try {
+
+		/*
+		LONG RegOpenKeyEx(
+	HKEY hKey,	// дескриптор указанного ключа
+	LPCTSTR lpSubKey,	// адрес имени открываемого подключа
+	DWORD ulOptions,	// зарезервировано
+	REGSAM samDesired,	// маска доступа безопасности
+	PHKEY phkResult 	// адрес дескриптора открытого ключа
+	);
+
+	LONG RegQueryValueEx(
+	HKEY hKey,		// дескриптор ключа
+    LPTSTR lpValueName,	// адерс имени значения
+    LPDWORD lpReserved,	// зарезервировано
+    LPDWORD lpType,	// адрес переменной для типа значения
+    LPBYTE lpData,	// адрес буфера для данных
+    LPDWORD lpcbData 	// адрес переменной для размер буфера данных
+	);
+	*/
+
+	//---------------------
+	/*
+	char *text = 	"HKEY_CLASSES_ROOT\.ARM"  ;
+	  HKEY Key;
+	char buf[256] = {0};
 	DWORD dws = 0x100;
-	DWORD dwt = 0;
+	DWORD dwt = 255;
 	LONG result = 0;
 
-	result = RegOpenKeyEx(HKEY_CLASSES_ROOT, "Applications\\MyProg.exe\\command", 0, KEY_ALL_ACCESS, &Key);
+	DWORD pcbData = 255;
+	char* pvData = new char[pcbData];
 
-   //	RegQueryValueEx(Key, "param2",0, 0, (LPBYTE)buf, &dws); //читается, все хорошо, а как считать (default) ?
-		RegQueryValueEx(Key, NULL,0, 0, (LPBYTE)buf, &dws);
-
-	RegCloseKey(Key);
+	if( RegOpenKeyEx(HKEY_CLASSES_ROOT,".xml", 0, KEY_ALL_ACCESS, &Key))//;
+	 {
+	  //	RegQueryValueEx(Key, "param2",0, 0, (LPBYTE)buf, &dws); //читается, все хорошо, а как считать (default) ?
+	   //RegQueryValueEx(Key, "", NULL, NULL, (LPBYTE)pvData, &pcbData);//	RegQueryValueEx(Key, NULL,0, 0, buf, &dws);
+	  if (RegQueryValueEx(Key, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)
+	  cout<<pvData<<endl;
+		RegCloseKey(Key);
+	 }
+	 else cout<<"не открылся";
 
 	} catch (...) { cout<<"Ошибка"<<endl;
 	}
+	*/
 	system ("pause");
 	return 0;
 }
