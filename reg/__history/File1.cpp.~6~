@@ -12,52 +12,34 @@
 #include <iostream.h>
 #include <Registry.hpp>
 #include <Windows.h>
-HKEY HUM_CLASSES(int number) {
-switch (number) {
-		case 1: return HKEY_CLASSES_ROOT;
-		case 2: return HKEY_CURRENT_USER;
-		case 3: return HKEY_LOCAL_MACHINE;
-		case 4: return HKEY_USERS;
-		case 5: return HKEY_CURRENT_CONFIG;
-        }
-}
-
 
 int _tmain(int argc, _TCHAR* argv[])
 {
  system("chcp 1251");
  system("cls");
-HKEY Key;
 HKEY fKey;
-unsigned short int x;
 DWORD pcbData = 255;
 char* pvData = new char[pcbData];
 DWORD regtype = 0;
 char* text = new char[20];
-cout<<"1 - HKEY_CLASSES_ROOT\n2 - HKEY_CURRENT_USER\n3 - HKEY_LOCAL_MACHINE\n4 - HKEY_USERS\n5 - HKEY_CURRENT_CONFIG "<<endl;
-cout<<"Введите номер дескриптора ключа: "<<endl;
-cin>>x;
-Key = HUM_CLASSES(x);
-
 cout<<"Введите путь"<<endl;
 cin>>text;
 
-if(RegOpenKeyEx(HKEY_CLASSES_ROOT,text, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)//                 //Открываем ключ HKEY_CLASSES_ROOT/...
+if(RegOpenKeyEx(HKEY_CLASSES_ROOT,text, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)//                 //Открываем ключ HKEY_CLASSES_ROOT/.xml
 {
-	if (RegQueryValueEx(fKey, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)                //Читаем его значение (по умолчанию)
+	if (RegQueryValueEx(fKey, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)                //Читаем его значение (по умолчанию) - "xmlfile"
 	{   cout<<"значение по умолчанию: "<<pvData<<endl;
 		RegCloseKey(fKey);																                 //Закрываем ключ
-	  if(RegOpenKeyEx(HKEY_CLASSES_ROOT, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ HKEY_CLASSES_ROOT/....
+		if(RegOpenKeyEx(HKEY_CLASSES_ROOT, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ HKEY_CLASSES_ROOT/xmlfile
 		{
 		 RegQueryValueEx (fKey, NULL, NULL, &regtype, NULL, &pcbData);
-			if (ERROR_SUCCESS==RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) )//Читаем его значение (по умолчанию) ...
+			if (ERROR_SUCCESS==RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) )//Читаем его значение (по умолчанию) - "XML Document"
 				cout<<"значение по умолчанию: "<<pvData<<endl;
 			else
 				cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\"<<pvData<<endl;
 		}
 		else
 			cout<<"Не могу открыть HKEY_CLASSES_ROOT\\"<<pvData<<endl;
-
 	}
 	else
 		cout<<"Не могу прочитать HKEY_CLASSES_ROOT\\"<<text<<endl;
@@ -65,6 +47,7 @@ if(RegOpenKeyEx(HKEY_CLASSES_ROOT,text, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCC
 else
 	cout<<"Не могу открыть HKEY_CLASSES_ROOT\\"<<text<<endl;
 delete[] pvData;
+  //	try {
 
 		/*
 		LONG RegOpenKeyEx(
@@ -85,6 +68,31 @@ delete[] pvData;
 	);
 	*/
 
+	//---------------------
+	/*
+	char *text = 	"HKEY_CLASSES_ROOT\.ARM"  ;
+	  HKEY Key;
+	char buf[256] = {0};
+	DWORD dws = 0x100;
+	DWORD dwt = 255;
+	LONG result = 0;
+
+	DWORD pcbData = 255;
+	char* pvData = new char[pcbData];
+
+	if( RegOpenKeyEx(HKEY_CLASSES_ROOT,".xml", 0, KEY_ALL_ACCESS, &Key))//;
+	 {
+	  //	RegQueryValueEx(Key, "param2",0, 0, (LPBYTE)buf, &dws); //читается, все хорошо, а как считать (default) ?
+	   //RegQueryValueEx(Key, "", NULL, NULL, (LPBYTE)pvData, &pcbData);//	RegQueryValueEx(Key, NULL,0, 0, buf, &dws);
+	  if (RegQueryValueEx(Key, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)
+	  cout<<pvData<<endl;
+		RegCloseKey(Key);
+	 }
+	 else cout<<"не открылся";
+
+	} catch (...) { cout<<"Ошибка"<<endl;
+	}
+	*/
 	system ("pause");
 	return 0;
 }
