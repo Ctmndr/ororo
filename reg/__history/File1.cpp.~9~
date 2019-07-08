@@ -42,16 +42,15 @@ int _tmain(int argc, _TCHAR* argv[])
  cout<<"Введите путь"<<endl;
  cin>>text;
 
- if( RegOpenKeyEx(Key,text, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)                 //Открываем ключ ...
+ if( RegOpenKeyEx(Key,text, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)//                 //Открываем ключ HKEY_CLASSES_ROOT/...
  {
 	if ( RegQueryValueEx(fKey, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)                //Читаем его значение (по умолчанию)
 	{   cout<<"значение по умолчанию: "<<pvData<<endl;
-		RegCloseKey(fKey);
-																						 //Закрываем ключ
-	  if( RegOpenKeyEx(Key, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ ....
+		RegCloseKey(fKey);																                 //Закрываем ключ
+	  if( RegOpenKeyEx(HKEY_CLASSES_ROOT, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ HKEY_CLASSES_ROOT/....
 		{
 		 RegQueryValueEx (fKey, NULL, NULL, &regtype, NULL, &pcbData);
-			if (RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) ==  ERROR_SUCCESS)//Читаем его значение (по умолчанию) ...
+			if ( ERROR_SUCCESS==RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) )//Читаем его значение (по умолчанию) ...
 				cout<<"значение по умолчанию: "<<pvData<<endl;
 			else
 				cout<<"Не могу прочитать "<<pvData<<endl;

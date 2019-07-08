@@ -47,8 +47,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	if ( RegQueryValueEx(fKey, "", NULL, NULL, (LPBYTE)pvData, &pcbData) == ERROR_SUCCESS)                //Читаем его значение (по умолчанию)
 	{   cout<<"значение по умолчанию: "<<pvData<<endl;
 		RegCloseKey(fKey);
-																						 //Закрываем ключ
-	  if( RegOpenKeyEx(Key, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ ....
+																		                 //Закрываем ключ
+	  if( RegOpenKeyEx(HKEY_CLASSES_ROOT, pvData, 0, KEY_QUERY_VALUE, &fKey) == ERROR_SUCCESS)          //Открываем ключ ....
 		{
 		 RegQueryValueEx (fKey, NULL, NULL, &regtype, NULL, &pcbData);
 			if (RegQueryValueEx (fKey, NULL, NULL, &regtype, (LPBYTE)pvData, &pcbData) ==  ERROR_SUCCESS)//Читаем его значение (по умолчанию) ...
